@@ -1,95 +1,154 @@
 # md-to-docx
 
-A Claude Code skill for converting Markdown files to professionally formatted Word (.docx) documents with automatic template style detection and Mermaid diagram rendering.
+> Claude Code Skill：将 Markdown 转为排版精美的 Word 文档，自动适配模板格式，支持 Mermaid 图表渲染。
 
-## Features
+## 效果预览
 
-- **Template-aware formatting**: Automatically extracts fonts, sizes, alignment, spacing, and margins from any `.doc` or `.docx` template
-- **Chinese typesetting defaults**: 宋体/黑体, 五号字 (10.5pt), 首行缩进两字符 when no template is provided
-- **Mermaid diagram rendering**: Converts Mermaid code blocks to PNG images via `mmdc` and embeds them in the document
-- **Full Markdown support**: Headings (h1-h6), bold/italic/code/strikethrough, bullet/ordered lists, tables, block quotes, code blocks
-- **Cross-platform**: Works on macOS, Windows, and Linux with automatic Chrome detection
+| 特性 | 说明 |
+|------|------|
+| 模板格式自动提取 | 给一个 `.doc`/`.docx` 模板，自动识别字体、字号、对齐、缩进、页边距 |
+| Mermaid 图表渲染 | Markdown 中的 Mermaid 代码块自动转为 PNG 图片嵌入文档 |
+| 中文排版标准 | 无模板时默认使用宋体/黑体、五号字、首行缩进两字符 |
+| 行内格式保留 | **粗体**、*斜体*、`代码`、~~删除线~~ 全部保留 |
+| 跨平台 | macOS / Windows / Linux 自动检测 Chrome |
 
-## Installation
+---
 
-### As a Claude Code Skill
+## 快速安装
 
-1. Clone this repo:
-   ```bash
-   git clone https://github.com/xielaoban/md-to-docx.git
-   ```
-
-2. Add to your Claude Code settings:
-   ```bash
-   claude skill add /path/to/md-to-docx
-   ```
-
-### Standalone Script
+### 第 1 步：安装前置依赖
 
 ```bash
+# Python 依赖（生成 Word 文档）
 pip install python-docx
+
+# Mermaid CLI（渲染流程图为 PNG）
 npm install -g @mermaid-js/mermaid-cli
+
+# Chrome 浏览器（Mermaid 渲染引擎）
+# macOS / Windows 通常已预装，Linux 需手动安装：
+#   sudo apt install google-chrome-stable
 ```
 
-## Usage
-
-### Via Claude Code
-
-Just ask naturally:
-- "把 chapter01.md 转成 Word"
-- "Convert this markdown to docx using my template"
-- "Export the report to Word format"
-
-### Via Command Line
+### 第 2 步：安装 Skill
 
 ```bash
-# Basic conversion (default Chinese typesetting)
+# 克隆仓库
+git clone https://github.com/KrabWW/md-to-docx.git
+
+# 添加到 Claude Code
+claude skill add /path/to/md-to-docx
+```
+
+### 第 3 步：开始使用
+
+在 Claude Code 中直接说：
+
+```
+把 chapter01.md 转成 Word
+```
+
+```
+用 docs/正文模板.doc 作为模板，把 report.md 导出为 Word
+```
+
+```
+Convert README.md to docx
+```
+
+搞定。
+
+---
+
+## 命令行独立使用
+
+不想通过 Claude Code？也可以直接当脚本用：
+
+```bash
+# 基本转换（使用中文默认排版）
 python3 scripts/md_to_docx.py input.md -o output.docx
 
-# With template (auto-detect formatting)
+# 使用模板（自动提取格式）
 python3 scripts/md_to_docx.py input.md -o output.docx -t template.doc
 
-# With .docx template
+# 使用 .docx 模板
 python3 scripts/md_to_docx.py input.md -o output.docx -t template.docx
 ```
 
-## Dependencies
+**参数说明：**
 
-| Tool | Purpose | Install |
-|------|---------|---------|
-| `python-docx` | Word document generation | `pip install python-docx` |
-| `mmdc` | Mermaid diagram rendering | `npm install -g @mermaid-js/mermaid-cli` |
-| Chrome/Chromium | Mermaid rendering backend | Pre-installed on most systems |
+| 参数 | 说明 | 示例 |
+|------|------|------|
+| `input` | 输入的 Markdown 文件 | `chapter01.md` |
+| `-o` | 输出路径（默认与输入同名 `.docx`） | `-o output.docx` |
+| `-t` | 模板文件（`.doc` 或 `.docx`） | `-t template.doc` |
 
-## Template Format Detection
+---
 
-When a template is provided, the script analyzes it to identify:
+## 模板格式检测
 
-1. **Title hierarchy** — identified by font size and alignment (largest centered = chapter title)
-2. **Body text** — identified by paragraphs with first-line indentation
-3. **Page setup** — margins, paper size copied from template
-4. **Chinese font pairing** — preserved (e.g., Times New Roman ↔ 宋体)
+提供一个 Word 模板文件，脚本会自动分析并提取：
 
-### Default Formatting (no template)
+| 提取项 | 识别方式 |
+|--------|---------|
+| 标题层级 | 按字号+对齐方式排序，最大居中 = 章标题 |
+| 正文字体 | 有首行缩进的最大段落 |
+| 页面设置 | 直接复制模板的页边距和纸张大小 |
+| 中文字体配对 | 保留模板中的映射（如 Times New Roman ↔ 宋体） |
 
-| Element | Font | Size | Alignment |
-|---------|------|------|-----------|
-| Chapter title (h1) | 黑体 | 18pt | Center |
-| Section title (h2) | 黑体 | 16pt | Center |
-| Subsection (h3) | 黑体 | 14pt | Left |
-| Body text | 宋体 | 10.5pt | Justify, 2-char indent |
-| Code | Consolas | 9pt | Left |
-| Quote | 楷体 | 10.5pt | Italic, indented |
+### 无模板时的默认格式
 
-## Supported Markdown
+| 元素 | 字体 | 字号 | 对齐 |
+|------|------|------|------|
+| 章标题 (h1) | 黑体 | 18pt | 居中 |
+| 节标题 (h2) | 黑体 | 16pt | 居中 |
+| 小节标题 (h3) | 黑体 | 14pt | 左对齐 |
+| 正文 | 宋体 | 10.5pt (五号) | 两端对齐，首行缩进 |
+| 代码块 | Consolas | 9pt | 左对齐 |
+| 引用 | 楷体 | 10.5pt | 斜体，左缩进 |
 
-- Headings: h1–h6
-- Inline formatting: **bold**, *italic*, `code`, ~~strikethrough~~, ***bold italic***
-- Lists: bullet (`-`/`*`) and ordered (`1.`)
-- Tables with header row
-- Code blocks with language label
-- Mermaid diagrams (rendered to PNG)
-- Block quotes and horizontal rules
+---
+
+## 支持的 Markdown 语法
+
+| 语法 | 示例 | 效果 |
+|------|------|------|
+| 标题 | `#` `##` `###` `####` | 自动匹配标题层级格式 |
+| 粗体 | `**文本**` | 加粗 |
+| 斜体 | `*文本*` | 斜体 |
+| 行内代码 | `` `代码` `` | Consolas 等宽字体 |
+| 删除线 | `~~文本~~` | 删除线 |
+| 无序列表 | `- 项目` / `* 项目` | 圆点列表，悬挂缩进 |
+| 有序列表 | `1. 项目` | 数字列表 |
+| 表格 | `\| 表头 \| 表头 \|` | 带边框的 Word 表格 |
+| 代码块 | ` ```python ` | 等宽字体 + 语言标签 |
+| Mermaid | ` ```mermaid ` | 渲染为 PNG 嵌入 |
+| 引用块 | `> 文本` | 斜体 + 左缩进 + 灰色 |
+| 分隔线 | `---` | 居中横线 |
+
+---
+
+## 常见问题
+
+### Q: Mermaid 图表渲染失败怎么办？
+
+检查以下几点：
+1. 是否安装了 `mmdc`：`mmdc --version`
+2. 是否安装了 Chrome：macOS 检查 `/Applications/Google Chrome.app`
+3. 渲染失败时会自动回退为代码块展示，不影响文档生成
+
+### Q: `.doc` 模板无法识别？
+
+macOS 会自动用 `textutil` 转换。Linux 需要安装 LibreOffice：
+```bash
+sudo apt install libreoffice
+```
+
+### Q: 如何自定义中文字体映射？
+
+编辑 `scripts/md_to_docx.py` 中的 `get_cn_font()` 函数，修改字体映射表。
+
+---
 
 ## License
 
