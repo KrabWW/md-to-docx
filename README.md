@@ -9,8 +9,9 @@
 pip install python-docx
 npm install -g @mermaid-js/mermaid-cli
 
-# 2. 安装 Skill（二选一）
-npx openclaw add skill https://github.com/KrabWW/md-to-docx    # OpenClaw
+# 2. 安装 Skill（任选一种方式）
+npx openclaw add skill https://github.com/KrabWW/md-to-docx          # OpenClaw（从 GitHub）
+clawhub install md-to-docx                                           # OpenClaw（从 ClawHub）
 git clone https://github.com/KrabWW/md-to-docx.git && claude skill add ./md-to-docx  # Claude Code
 
 # 3. 使用（自然语言）
