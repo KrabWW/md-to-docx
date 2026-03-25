@@ -2,6 +2,21 @@
 
 > Claude Code / OpenClaw Skill：将 Markdown 转为排版精美的 Word 文档，自动适配模板格式，支持 Mermaid 图表渲染。
 
+## Quick Start
+
+```bash
+# 1. 安装前置依赖
+pip install python-docx
+npm install -g @mermaid-js/mermaid-cli
+
+# 2. 安装 Skill（二选一）
+npx openclaw add skill https://github.com/KrabWW/md-to-docx    # OpenClaw
+git clone https://github.com/KrabWW/md-to-docx.git && claude skill add ./md-to-docx  # Claude Code
+
+# 3. 使用（自然语言）
+帮我把 chapter01.md 转成 Word 文档
+```
+
 ## 效果预览
 
 | 特性 | 说明 |
