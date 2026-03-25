@@ -1,0 +1,18 @@
+# Dependencies
+__pycache__/
+*.pyc
+node_modules/
+
+# Output
+*.docx
+.mermaid_images/
+
+# Temp
+/tmp/
+.DS_Store
+*.converted.docx
+.puppeteer-config.json
+
+# IDE
+.vscode/
+.idea/
