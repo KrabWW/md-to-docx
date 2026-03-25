@@ -1,6 +1,6 @@
 # md-to-docx
 
-> Claude Code Skill：将 Markdown 转为排版精美的 Word 文档，自动适配模板格式，支持 Mermaid 图表渲染。
+> Claude Code / OpenClaw Skill：将 Markdown 转为排版精美的 Word 文档，自动适配模板格式，支持 Mermaid 图表渲染。
 
 ## 效果预览
 
@@ -32,20 +32,25 @@ npm install -g @mermaid-js/mermaid-cli
 
 ### 第 2 步：安装 Skill
 
-```bash
-# 克隆仓库
-git clone https://github.com/KrabWW/md-to-docx.git
+**Claude Code：**
 
-# 添加到 Claude Code
+```bash
+git clone https://github.com/KrabWW/md-to-docx.git
 claude skill add /path/to/md-to-docx
+```
+
+**OpenClaw：**
+
+```bash
+npx openclaw add skill https://github.com/KrabWW/md-to-docx
 ```
 
 ### 第 3 步：开始使用
 
-在 Claude Code 中直接说：
+安装完成后，直接用自然语言告诉 AI 就行：
 
 ```
-把 chapter01.md 转成 Word
+帮我把 chapter01.md 转成 Word 文档
 ```
 
 ```
@@ -62,7 +67,7 @@ Convert README.md to docx
 
 ## 命令行独立使用
 
-不想通过 Claude Code？也可以直接当脚本用：
+不想通过 AI 助手？也可以直接当 Python 脚本用：
 
 ```bash
 # 基本转换（使用中文默认排版）
